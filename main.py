@@ -27,6 +27,7 @@ class Panel(wx.Panel):
             for x in xrange(n):
                 i = y * n + x
                 v = int(values[i] * 255)
+                v = min(v, 255)
                 dc.SetBrush(self.brushes[v])
                 dc.DrawRectangle(x * w, y * h, w - 0, h - 0)
     def on_update(self):
