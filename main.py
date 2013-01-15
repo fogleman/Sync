@@ -10,10 +10,14 @@ class Panel(wx.Panel):
         self.brushes = [wx.Brush(wx.Colour(0, x / 2, x)) for x in range(256)]
         self.SetBackgroundStyle(wx.BG_STYLE_CUSTOM)
         self.Bind(wx.EVT_SIZE, self.on_size)
+        self.Bind(wx.EVT_LEFT_DOWN, self.on_left_down)
         self.Bind(wx.EVT_PAINT, self.on_paint)
         self.on_update()
     def on_size(self, event):
         event.Skip()
+        self.Refresh()
+    def on_left_down(self, event):
+        self.model.reset()
         self.Refresh()
     def on_paint(self, event):
         dc = wx.AutoBufferedPaintDC(self)
