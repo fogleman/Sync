@@ -45,6 +45,9 @@ void update(Model *model, double dt) {
                 continue;
             }
             int d2 = dx * dx + dy * dy;
+            if (d2 > m * m) {
+                continue;
+            }
             model->values[j] =
                 g(f(model->values[j]) + model->influence / d2);
         }
