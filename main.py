@@ -24,7 +24,7 @@ class Panel(wx.Panel):
         dc.SetBackground(wx.BLACK_BRUSH)
         dc.Clear()
         dc.SetPen(wx.TRANSPARENT_PEN)
-        p = 0
+        p = 1
         n = self.model.size
         cw, ch = self.GetClientSize()
         w, h = cw / n, ch / n
@@ -34,13 +34,15 @@ class Panel(wx.Panel):
                 i = y * n + x
                 v = int(values[i] * 255)
                 v = min(v, 255)
+                v = 255 - v
+                v = v if v > 200 else 0
                 dc.SetBrush(self.brushes[v])
                 dc.DrawRectangle(x * w, y * h, w - p, h - p)
     def on_update(self):
         now = time.time()
         dt = now - self.timestamp
         self.timestamp = now
-        self.model.update(dt * 2)
+        self.model.update(dt * 1)
         if self.model.sync:
             self.model.reset()
         self.Refresh()
