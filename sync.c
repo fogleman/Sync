@@ -18,7 +18,8 @@ double g(double y) {
     return y < 1.0 ? log(1.0 / (1.0 - y)) : 50.0;
 }
 
-void update(Model *model, double dt) {
+int update(Model *model, double dt) {
+    int result = 0;
     int size = model->size;
     int count = size * size;
     double xt = g(model->threshold);
@@ -69,10 +70,16 @@ void update(Model *model, double dt) {
             }
         }
         free(seen);
+        int n = 0;
         for (int i = 0; i < count; i++) {
             if (f(model->values[i]) >= model->threshold) {
+                n++;
                 model->values[i] = 0.0;
             }
         }
+        if (n > result) {
+            result = n;
+        }
     }
+    return result;
 }

@@ -41,8 +41,10 @@ class Panel(wx.Panel):
         dt = now - self.timestamp
         self.timestamp = now
         self.model.update(dt * 2)
+        if self.model.sync:
+            self.model.reset()
         self.Refresh()
-        wx.CallLater(16, self.on_update)
+        wx.CallLater(10, self.on_update)
 
 def main():
     app = wx.App(False)

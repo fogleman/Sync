@@ -3,7 +3,7 @@ import math
 import random
 
 SIZE = 32
-INFLUENCE = 0.003
+INFLUENCE = 0.005
 
 def f(x):
     return 1 - math.e ** -x
@@ -30,6 +30,7 @@ class Model(object):
         self.influence = INFLUENCE
         self.reset()
     def reset(self):
+        self.sync = False
         self.model = cModel()
         self.model.size = self.size
         self.model.threshold = self.threshold
@@ -38,7 +39,10 @@ class Model(object):
         for i in xrange(self.count):
             self.model.values[i] = random.random() * g(self.threshold)
     def update(self, dt):
-        dll.update(byref(self.model), dt)
+        result = dll.update(byref(self.model), dt)
+        if result == self.count:
+            self.sync = True
+        return result
     def get_values(self):
         return [f(self.model.values[i]) / self.threshold
             for i in xrange(self.count)]
