@@ -7,7 +7,7 @@ class Panel(wx.Panel):
         super(Panel, self).__init__(parent)
         self.model = sync.Model()
         self.timestamp = time.time()
-        self.brushes = [wx.Brush(wx.Colour(0, x / 2, x)) for x in range(256)]
+        self.brushes = [wx.Brush(wx.Colour(x / 2, x, x / 4)) for x in range(256)]
         self.SetBackgroundStyle(wx.BG_STYLE_CUSTOM)
         self.Bind(wx.EVT_SIZE, self.on_size)
         self.Bind(wx.EVT_LEFT_DOWN, self.on_left_down)
