@@ -2,7 +2,7 @@ from ctypes import *
 import math
 import random
 
-WIDTH = 48
+WIDTH = 36
 HEIGHT = 24
 INFLUENCE = 0.005
 

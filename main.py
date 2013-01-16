@@ -22,6 +22,8 @@ class Panel(wx.Panel):
         self.Refresh()
     def on_paint(self, event):
         dc = wx.AutoBufferedPaintDC(self)
+        self.draw(dc)
+    def draw(self, dc):
         dc.SetBackground(wx.BLACK_BRUSH)
         dc.Clear()
         dc.SetPen(wx.TRANSPARENT_PEN)
@@ -40,6 +42,12 @@ class Panel(wx.Panel):
                 dc.SetBrush(self.brushes[v])
                 dc.DrawRectangle(x * w + p / 2 + dx, y * h + p / 2 + dy,
                     w - p, h - p)
+    def create_bitmap(self):
+        cw, ch = self.GetClientSize()
+        bitmap = wx.EmptyBitmap(cw, ch)
+        dc = wx.MemoryDC(bitmap)
+        self.draw(dc)
+        return bitmap
     def on_update(self):
         now = time.time()
         dt = now - self.timestamp
