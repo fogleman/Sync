@@ -3,11 +3,12 @@ import time
 import wx
 
 class Panel(wx.Panel):
-    def __init__(self, parent):
+    def __init__(self, parent, model):
         super(Panel, self).__init__(parent)
-        self.model = sync.Model()
+        self.model = model
         self.timestamp = time.time()
-        self.brushes = [wx.Brush(wx.Colour(x / 2, x, x / 4)) for x in range(256)]
+        self.brushes = [wx.Brush(wx.Colour(x / 2, x, x / 4))
+            for x in range(256)]
         self.SetBackgroundStyle(wx.BG_STYLE_CUSTOM)
         self.Bind(wx.EVT_SIZE, self.on_size)
         self.Bind(wx.EVT_LEFT_DOWN, self.on_left_down)
@@ -24,19 +25,21 @@ class Panel(wx.Panel):
         dc.SetBackground(wx.BLACK_BRUSH)
         dc.Clear()
         dc.SetPen(wx.TRANSPARENT_PEN)
-        p = 1
-        n = self.model.size
+        p = 8
+        mw, mh = self.model.width, self.model.height
         cw, ch = self.GetClientSize()
-        w, h = cw / n, ch / n
+        w, h = cw / mw, ch / mh
+        dx, dy = (cw - w * mw) / 2, (ch - h * mh) / 2
         values = self.model.get_values()
-        for y in xrange(n):
-            for x in xrange(n):
-                i = y * n + x
+        for y in xrange(mh):
+            for x in xrange(mw):
+                i = y * mw + x
                 v = int(values[i] * 255)
                 v = min(v, 255)
                 v = 255 - v * 3 if v < 80 else 0
                 dc.SetBrush(self.brushes[v])
-                dc.DrawRectangle(x * w, y * h, w - p, h - p)
+                dc.DrawRectangle(x * w + p / 2 + dx, y * h + p / 2 + dy,
+                    w - p, h - p)
     def on_update(self):
         now = time.time()
         dt = now - self.timestamp
@@ -50,9 +53,10 @@ class Panel(wx.Panel):
 def main():
     app = wx.App(False)
     frame = wx.Frame(None)
-    Panel(frame)
+    model = sync.Model()
+    Panel(frame, model)
     frame.SetTitle('Sync')
-    frame.SetClientSize((512, 512))
+    frame.SetClientSize((model.width * 20, model.height * 20))
     frame.Center()
     frame.Show()
     app.MainLoop()

@@ -2,7 +2,8 @@ from ctypes import *
 import math
 import random
 
-SIZE = 32
+WIDTH = 48
+HEIGHT = 24
 INFLUENCE = 0.005
 
 def f(x):
@@ -13,7 +14,8 @@ def g(y):
 
 class cModel(Structure):
     _fields_ = [
-        ('size', c_int),
+        ('width', c_int),
+        ('height', c_int),
         ('threshold', c_double),
         ('influence', c_double),
         ('values', POINTER(c_double)),
@@ -24,15 +26,17 @@ dll.update.argtypes = [POINTER(cModel), c_double]
 
 class Model(object):
     def __init__(self):
-        self.size = SIZE
-        self.count = self.size * self.size
+        self.width = WIDTH
+        self.height = HEIGHT
+        self.count = self.width * self.height
         self.threshold = f(2)
         self.influence = INFLUENCE
         self.reset()
     def reset(self):
         self.sync = False
         self.model = cModel()
-        self.model.size = self.size
+        self.model.width = self.width
+        self.model.height = self.height
         self.model.threshold = self.threshold
         self.model.influence = self.influence
         self.model.values = (c_double * self.count)()

@@ -4,7 +4,8 @@
 #define kE 2.71828182846
 
 typedef struct {
-    int size;
+    int width;
+    int height;
     double threshold;
     double influence;
     double *values;
@@ -20,8 +21,9 @@ double g(double y) {
 
 int update(Model *model, double dt) {
     int result = 0;
-    int size = model->size;
-    int count = size * size;
+    int width = model->width;
+    int height = model->height;
+    int count = width * height;
     double xt = g(model->threshold);
     while (dt > 0) {
         double mini = 0;
@@ -47,14 +49,14 @@ int update(Model *model, double dt) {
                 }
                 done = 0;
                 seen[i] = 1;
-                int x1 = i % size;
-                int y1 = i / size;
+                int x1 = i % width;
+                int y1 = i / width;
                 for (int j = 0; j < count; j++) {
                     if (seen[j] || i == j) {
                         continue;
                     }
-                    int x2 = j % size;
-                    int y2 = j / size;
+                    int x2 = j % width;
+                    int y2 = j / width;
                     int dx = abs(x2 - x1);
                     int dy = abs(y2 - y1);
                     int d2 = dx * dx + dy * dy;
