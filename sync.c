@@ -47,14 +47,14 @@ int update(Model *model, double dt) {
                 if (seen[i] || model->values[i] < xt) {
                     continue;
                 }
-                done = 0;
                 seen[i] = 1;
                 int x1 = i % width;
                 int y1 = i / width;
                 for (int j = 0; j < count; j++) {
-                    if (seen[j] || i == j) {
+                    if (seen[j] || i == j || model->values[j] >= xt) {
                         continue;
                     }
+                    done = 0;
                     int x2 = j % width;
                     int y2 = j / width;
                     int dx = abs(x2 - x1);
