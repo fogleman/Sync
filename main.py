@@ -38,7 +38,7 @@ class Panel(wx.Panel):
                 i = y * mw + x
                 v = int(values[i] * 255)
                 v = min(v, 255)
-                v = 255 - v * 3 if v < 80 else 0
+                v = 255 - v * 3 if v < 85 else 0
                 dc.SetBrush(self.brushes[v])
                 dc.DrawRectangle(x * w + dx, y * h + dy, w - p, h - p)
     def create_bitmap(self):
@@ -63,7 +63,7 @@ def main():
     model = sync.Model()
     Panel(frame, model)
     frame.SetTitle('Sync')
-    frame.SetClientSize((model.width * 20, model.height * 20))
+    frame.SetClientSize((model.width * 24, model.height * 24))
     frame.Center()
     frame.Show()
     app.MainLoop()
