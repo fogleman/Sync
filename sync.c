@@ -42,10 +42,7 @@ int update(Model *model, double dt) {
         while (1) {
             int done = 1;
             for (int i = 0; i < count; i++) {
-                if (seen[i]) {
-                    continue;
-                }
-                if (f(model->values[i]) < model->threshold) {
+                if (seen[i] || model->values[i] < xt) {
                     continue;
                 }
                 done = 0;
@@ -53,7 +50,7 @@ int update(Model *model, double dt) {
                 int x1 = i % size;
                 int y1 = i / size;
                 for (int j = 0; j < count; j++) {
-                    if (i == j) {
+                    if (seen[j] || i == j) {
                         continue;
                     }
                     int x2 = j % size;
@@ -72,9 +69,9 @@ int update(Model *model, double dt) {
         free(seen);
         int n = 0;
         for (int i = 0; i < count; i++) {
-            if (f(model->values[i]) >= model->threshold) {
-                n++;
+            if (model->values[i] >= xt) {
                 model->values[i] = 0.0;
+                n++;
             }
         }
         if (n > result) {
