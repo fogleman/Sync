@@ -52,7 +52,7 @@ class Panel(wx.Panel):
         dt = now - self.timestamp
         self.timestamp = now
         self.model.update(dt * 1)
-        if self.model.sync:
+        if self.model.sync == self.model.count:
             self.model.reset()
         self.Refresh()
         wx.CallLater(10, self.on_update)

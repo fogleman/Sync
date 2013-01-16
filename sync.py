@@ -35,7 +35,7 @@ class Model(object):
         self.influence = INFLUENCE
         self.reset()
     def reset(self):
-        self.sync = False
+        self.sync = 0
         self.model = cModel()
         self.model.width = self.width
         self.model.height = self.height
@@ -46,8 +46,7 @@ class Model(object):
             self.model.values[i] = random.random() * g(self.threshold)
     def update(self, dt):
         result = dll.update(byref(self.model), dt * SPEED)
-        if result == self.count:
-            self.sync = True
+        self.sync = max(self.sync, result)
         return result
     def get_values(self):
         return [f(self.model.values[i]) / self.threshold
