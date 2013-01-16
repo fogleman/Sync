@@ -5,6 +5,8 @@ import random
 WIDTH = 32
 HEIGHT = 18
 INFLUENCE = 0.0025
+PERIOD = 2.0
+SPEED = 1.0
 
 def f(x):
     return 1 - math.e ** -x
@@ -29,7 +31,7 @@ class Model(object):
         self.width = WIDTH
         self.height = HEIGHT
         self.count = self.width * self.height
-        self.threshold = f(2)
+        self.threshold = f(PERIOD)
         self.influence = INFLUENCE
         self.reset()
     def reset(self):
@@ -43,7 +45,7 @@ class Model(object):
         for i in xrange(self.count):
             self.model.values[i] = random.random() * g(self.threshold)
     def update(self, dt):
-        result = dll.update(byref(self.model), dt)
+        result = dll.update(byref(self.model), dt * SPEED)
         if result == self.count:
             self.sync = True
         return result
