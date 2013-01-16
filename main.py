@@ -31,7 +31,7 @@ class Panel(wx.Panel):
         mw, mh = self.model.width, self.model.height
         cw, ch = self.GetClientSize()
         w, h = cw / mw, ch / mh
-        dx, dy = (cw - w * mw) / 2, (ch - h * mh) / 2
+        dx, dy = (cw - w * mw) / 2 + p / 2, (ch - h * mh) / 2 + p / 2
         values = self.model.get_values()
         for y in xrange(mh):
             for x in xrange(mw):
@@ -40,8 +40,7 @@ class Panel(wx.Panel):
                 v = min(v, 255)
                 v = 255 - v * 3 if v < 80 else 0
                 dc.SetBrush(self.brushes[v])
-                dc.DrawRectangle(x * w + p / 2 + dx, y * h + p / 2 + dy,
-                    w - p, h - p)
+                dc.DrawRectangle(x * w + dx, y * h + dy, w - p, h - p)
     def create_bitmap(self):
         cw, ch = self.GetClientSize()
         bitmap = wx.EmptyBitmap(cw, ch)

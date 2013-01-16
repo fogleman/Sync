@@ -2,9 +2,9 @@ from ctypes import *
 import math
 import random
 
-WIDTH = 36
-HEIGHT = 24
-INFLUENCE = 0.005
+WIDTH = 32
+HEIGHT = 18
+INFLUENCE = 0.0025
 
 def f(x):
     return 1 - math.e ** -x
