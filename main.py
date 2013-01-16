@@ -21,8 +21,10 @@ class Panel(wx.Panel):
         self.Refresh()
     def on_paint(self, event):
         dc = wx.AutoBufferedPaintDC(self)
+        dc.SetBackground(wx.BLACK_BRUSH)
         dc.Clear()
         dc.SetPen(wx.TRANSPARENT_PEN)
+        p = 0
         n = self.model.size
         cw, ch = self.GetClientSize()
         w, h = cw / n, ch / n
@@ -33,14 +35,12 @@ class Panel(wx.Panel):
                 v = int(values[i] * 255)
                 v = min(v, 255)
                 dc.SetBrush(self.brushes[v])
-                dc.DrawRectangle(x * w, y * h, w - 0, h - 0)
+                dc.DrawRectangle(x * w, y * h, w - p, h - p)
     def on_update(self):
         now = time.time()
         dt = now - self.timestamp
         self.timestamp = now
-        d = 8
-        for _ in xrange(d):
-            self.model.update(dt * 2 / d)
+        self.model.update(dt * 2)
         self.Refresh()
         wx.CallLater(16, self.on_update)
 

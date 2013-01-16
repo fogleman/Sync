@@ -2,7 +2,7 @@ from ctypes import *
 import math
 import random
 
-SIZE = 64
+SIZE = 32
 INFLUENCE = 0.003
 
 def f(x):

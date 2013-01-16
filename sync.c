@@ -19,43 +19,60 @@ double g(double y) {
 }
 
 void update(Model *model, double dt) {
-    int n = model->size;
-    int count = n * n;
-    int m = 4;
-    double *values = (double *)calloc(count, sizeof(double));
-    for (int i = 0; i < count; i++) {
-        model->values[i] += dt;
-        values[i] = model->values[i];
-    }
-    for (int i = 0; i < count; i++) {
-        if (f(values[i]) < model->threshold) {
-            continue;
-        }
-        int x1 = i % n;
-        int y1 = i / n;
-        for (int j = 0; j < count; j++) {
-            if (i == j) {
-                continue;
+    int size = model->size;
+    int count = size * size;
+    double xt = g(model->threshold);
+    while (dt > 0) {
+        double mini = 0;
+        double mind = xt - model->values[0];
+        for (int i = 1; i < count; i++) {
+            double d = xt - model->values[i];
+            if (d < mind) {
+                mini = i;
+                mind = d;
             }
-            int x2 = j % n;
-            int y2 = j / n;
-            int dx = abs(x2 - x1);
-            int dy = abs(y2 - y1);
-            if (dx > m || dy > m) {
-                continue;
+        }
+        double d = mind < dt ? mind : dt;
+        dt -= d;
+        for (int i = 0; i < count; i++) {
+            model->values[i] += d;
+        }
+        int *seen = (int *)calloc(count, sizeof(int));
+        while (1) {
+            int done = 1;
+            for (int i = 0; i < count; i++) {
+                if (seen[i]) {
+                    continue;
+                }
+                if (f(model->values[i]) < model->threshold) {
+                    continue;
+                }
+                done = 0;
+                seen[i] = 1;
+                int x1 = i % size;
+                int y1 = i / size;
+                for (int j = 0; j < count; j++) {
+                    if (i == j) {
+                        continue;
+                    }
+                    int x2 = j % size;
+                    int y2 = j / size;
+                    int dx = abs(x2 - x1);
+                    int dy = abs(y2 - y1);
+                    int d2 = dx * dx + dy * dy;
+                    model->values[j] =
+                        g(f(model->values[j]) + model->influence / d2);
+                }
             }
-            int d2 = dx * dx + dy * dy;
-            if (d2 > m * m) {
-                continue;
+            if (done) {
+                break;
             }
-            model->values[j] =
-                g(f(model->values[j]) + model->influence / d2);
+        }
+        free(seen);
+        for (int i = 0; i < count; i++) {
+            if (f(model->values[i]) >= model->threshold) {
+                model->values[i] = 0.0;
+            }
         }
     }
-    for (int i = 0; i < count; i++) {
-        if (f(values[i]) >= model->threshold) {
-            model->values[i] = 0.0;
-        }
-    }
-    free(values);
 }
