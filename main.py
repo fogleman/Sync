@@ -34,8 +34,7 @@ class Panel(wx.Panel):
                 i = y * n + x
                 v = int(values[i] * 255)
                 v = min(v, 255)
-                v = 255 - v
-                v = v if v > 200 else 0
+                v = 255 - v * 3 if v < 80 else 0
                 dc.SetBrush(self.brushes[v])
                 dc.DrawRectangle(x * w, y * h, w - p, h - p)
     def on_update(self):
