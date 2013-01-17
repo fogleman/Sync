@@ -2,14 +2,6 @@ from ctypes import *
 import math
 import random
 
-WIDTH = 12
-HEIGHT = 12
-DEPTH = 12
-INFLUENCE = 0.002
-PERIOD = 3.0
-SPEED = 1.0
-SIMILARITY = 4
-
 def f(x):
     return 1 - math.e ** -x
 
@@ -31,13 +23,16 @@ dll = CDLL('_sync')
 dll.update.argtypes = [POINTER(cModel), c_double]
 
 class Model(object):
-    def __init__(self):
-        self.width = WIDTH
-        self.height = HEIGHT
-        self.depth = DEPTH
+    def __init__(
+        self, width, height, depth, speed, period, influence, similarity):
+        self.width = width
+        self.height = height
+        self.depth = depth
         self.count = self.width * self.height * self.depth
-        self.threshold = f(PERIOD)
-        self.influence = INFLUENCE
+        self.speed = speed
+        self.threshold = f(period)
+        self.influence = influence
+        self.similarity = similarity
         self.reset()
     def reset(self):
         self.sync = 0
@@ -50,11 +45,11 @@ class Model(object):
         self.model.weights = (c_double * self.count)()
         self.model.values = (c_double * self.count)()
         for i in xrange(self.count):
-            self.model.weights[i] = (1.0 + random.random() / SIMILARITY -
-                1.0 / (SIMILARITY * 2))
+            self.model.weights[i] = (1.0 + random.random() / self.similarity -
+                1.0 / (self.similarity * 2))
             self.model.values[i] = f(random.random() * g(self.threshold))
     def update(self, dt):
-        result = dll.update(byref(self.model), dt * SPEED)
+        result = dll.update(byref(self.model), dt * self.speed)
         self.sync = max(self.sync, result)
         return result
     def get_values(self):

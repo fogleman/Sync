@@ -4,6 +4,14 @@ import math
 import random
 import sync
 
+WIDTH = 32
+HEIGHT = 4
+DEPTH = 16
+SPEED = 1.0
+PERIOD = 3.0
+INFLUENCE = 0.002
+SIMILARITY = 4
+
 def get_color(n):
     return (n / 2, n / 1, n / 4)
 
@@ -19,7 +27,8 @@ def cube_vertices(x, y, z, n):
 
 class Model(object):
     def __init__(self):
-        self.model = sync.Model()
+        self.model = sync.Model(
+            WIDTH, HEIGHT, DEPTH, SPEED, PERIOD, INFLUENCE, SIMILARITY)
         self.batch = pyglet.graphics.Batch()
         self.vertex_lists = {}
         for z in xrange(self.model.depth):

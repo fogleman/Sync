@@ -2,6 +2,13 @@ import sync
 import time
 import wx
 
+WIDTH = 32
+HEIGHT = 18
+SPEED = 1.0
+PERIOD = 3.0
+INFLUENCE = 0.0025
+SIMILARITY = 4
+
 class Panel(wx.Panel):
     def __init__(self, parent, model):
         super(Panel, self).__init__(parent)
@@ -60,7 +67,7 @@ class Panel(wx.Panel):
 def main():
     app = wx.App(False)
     frame = wx.Frame(None)
-    model = sync.Model()
+    model = sync.Model(WIDTH, HEIGHT, 1, SPEED, PERIOD, INFLUENCE, SIMILARITY)
     Panel(frame, model)
     frame.SetTitle('Sync')
     frame.SetClientSize((model.width * 24, model.height * 24))
