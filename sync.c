@@ -6,6 +6,7 @@
 typedef struct {
     int width;
     int height;
+    int depth;
     double threshold;
     double influence;
     double *weights;
@@ -24,7 +25,9 @@ int update(Model *model, double dt) {
     int result = 0;
     int width = model->width;
     int height = model->height;
-    int count = width * height;
+    int depth = model->depth;
+    int count = width * height * depth;
+    int plane = width * height;
     double threshold = model->threshold;
     double influence = model->influence;
     double *weights = model->weights;
@@ -49,18 +52,21 @@ int update(Model *model, double dt) {
                     continue;
                 }
                 seen[i] = 1;
-                int x1 = i % width;
-                int y1 = i / width;
+                int x1 = i % plane % width;
+                int y1 = i % plane / width;
+                int z1 = i / plane;
                 for (int j = 0; j < count; j++) {
                     if (seen[j] || i == j || values[j] >= threshold) {
                         continue;
                     }
                     done = 0;
-                    int x2 = j % width;
-                    int y2 = j / width;
+                    int x2 = j % plane % width;
+                    int y2 = j % plane / width;
+                    int z2 = j / plane;
                     int dx = abs(x2 - x1);
                     int dy = abs(y2 - y1);
-                    int d2 = dx * dx + dy * dy;
+                    int dz = abs(z2 - z1);
+                    int d2 = dx * dx + dy * dy + dz * dz;
                     values[j] += influence / d2;
                 }
             }

@@ -2,9 +2,10 @@ from ctypes import *
 import math
 import random
 
-WIDTH = 32
-HEIGHT = 18
-INFLUENCE = 0.005
+WIDTH = 12
+HEIGHT = 12
+DEPTH = 12
+INFLUENCE = 0.002
 PERIOD = 3.0
 SPEED = 1.0
 SIMILARITY = 4
@@ -19,6 +20,7 @@ class cModel(Structure):
     _fields_ = [
         ('width', c_int),
         ('height', c_int),
+        ('depth', c_int),
         ('threshold', c_double),
         ('influence', c_double),
         ('weights', POINTER(c_double)),
@@ -32,7 +34,8 @@ class Model(object):
     def __init__(self):
         self.width = WIDTH
         self.height = HEIGHT
-        self.count = self.width * self.height
+        self.depth = DEPTH
+        self.count = self.width * self.height * self.depth
         self.threshold = f(PERIOD)
         self.influence = INFLUENCE
         self.reset()
@@ -41,6 +44,7 @@ class Model(object):
         self.model = cModel()
         self.model.width = self.width
         self.model.height = self.height
+        self.model.depth = self.depth
         self.model.threshold = self.threshold
         self.model.influence = self.influence
         self.model.weights = (c_double * self.count)()
