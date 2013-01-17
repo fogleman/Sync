@@ -24,34 +24,38 @@ int update(Model *model, double dt) {
     int width = model->width;
     int height = model->height;
     int count = width * height;
-    double xt = g(model->threshold);
+    double threshold = model->threshold;
+    double influence = model->influence;
+    double *values = model->values;
     while (dt > 0) {
-        double mini = 0;
-        double mind = xt - model->values[0];
+        double maxi = 0;
+        double maxv = values[0];
         for (int i = 1; i < count; i++) {
-            double d = xt - model->values[i];
-            if (d < mind) {
-                mini = i;
-                mind = d;
+            if (values[i] > maxv) {
+                maxi = i;
+                maxv = values[i];
             }
         }
-        double d = mind < dt ? mind : dt;
+        double d = g(threshold) - g(maxv);
+        if (d > dt) {
+            d = dt;
+        }
         dt -= d;
         for (int i = 0; i < count; i++) {
-            model->values[i] += d;
+            values[i] = f(g(values[i]) + d);
         }
         int *seen = (int *)calloc(count, sizeof(int));
         while (1) {
             int done = 1;
             for (int i = 0; i < count; i++) {
-                if (seen[i] || model->values[i] < xt) {
+                if (seen[i] || values[i] < threshold) {
                     continue;
                 }
                 seen[i] = 1;
                 int x1 = i % width;
                 int y1 = i / width;
                 for (int j = 0; j < count; j++) {
-                    if (seen[j] || i == j || model->values[j] >= xt) {
+                    if (seen[j] || i == j || values[j] >= threshold) {
                         continue;
                     }
                     done = 0;
@@ -60,8 +64,7 @@ int update(Model *model, double dt) {
                     int dx = abs(x2 - x1);
                     int dy = abs(y2 - y1);
                     int d2 = dx * dx + dy * dy;
-                    model->values[j] =
-                        g(f(model->values[j]) + model->influence / d2);
+                    values[j] += influence / d2;
                 }
             }
             if (done) {
@@ -71,8 +74,8 @@ int update(Model *model, double dt) {
         free(seen);
         int n = 0;
         for (int i = 0; i < count; i++) {
-            if (model->values[i] >= xt) {
-                model->values[i] = 0.0;
+            if (values[i] >= threshold) {
+                values[i] = 0.0;
                 n++;
             }
         }

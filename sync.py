@@ -43,11 +43,11 @@ class Model(object):
         self.model.influence = self.influence
         self.model.values = (c_double * self.count)()
         for i in xrange(self.count):
-            self.model.values[i] = random.random() * g(self.threshold)
+            self.model.values[i] = f(random.random() * g(self.threshold))
     def update(self, dt):
         result = dll.update(byref(self.model), dt * SPEED)
         self.sync = max(self.sync, result)
         return result
     def get_values(self):
-        return [f(self.model.values[i]) / self.threshold
+        return [self.model.values[i] / self.threshold
             for i in xrange(self.count)]
