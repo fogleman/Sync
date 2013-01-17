@@ -4,9 +4,10 @@ import random
 
 WIDTH = 32
 HEIGHT = 18
-INFLUENCE = 0.0025
-PERIOD = 2.0
+INFLUENCE = 0.005
+PERIOD = 3.0
 SPEED = 1.0
+SIMILARITY = 4
 
 def f(x):
     return 1 - math.e ** -x
@@ -20,6 +21,7 @@ class cModel(Structure):
         ('height', c_int),
         ('threshold', c_double),
         ('influence', c_double),
+        ('weights', POINTER(c_double)),
         ('values', POINTER(c_double)),
     ]
 
@@ -41,8 +43,11 @@ class Model(object):
         self.model.height = self.height
         self.model.threshold = self.threshold
         self.model.influence = self.influence
+        self.model.weights = (c_double * self.count)()
         self.model.values = (c_double * self.count)()
         for i in xrange(self.count):
+            self.model.weights[i] = (1.0 + random.random() / SIMILARITY -
+                1.0 / (SIMILARITY * 2))
             self.model.values[i] = f(random.random() * g(self.threshold))
     def update(self, dt):
         result = dll.update(byref(self.model), dt * SPEED)

@@ -8,6 +8,7 @@ typedef struct {
     int height;
     double threshold;
     double influence;
+    double *weights;
     double *values;
 } Model;
 
@@ -26,23 +27,19 @@ int update(Model *model, double dt) {
     int count = width * height;
     double threshold = model->threshold;
     double influence = model->influence;
+    double *weights = model->weights;
     double *values = model->values;
     while (dt > 0) {
-        double maxi = 0;
-        double maxv = values[0];
-        for (int i = 1; i < count; i++) {
-            if (values[i] > maxv) {
-                maxi = i;
-                maxv = values[i];
+        double d = dt;
+        for (int i = 0; i < count; i++) {
+            double e = (g(threshold) - g(values[i])) / weights[i];
+            if (e < d) {
+                d = e;
             }
-        }
-        double d = g(threshold) - g(maxv);
-        if (d > dt) {
-            d = dt;
         }
         dt -= d;
         for (int i = 0; i < count; i++) {
-            values[i] = f(g(values[i]) + d);
+            values[i] = f(g(values[i]) + d * weights[i]);
         }
         int *seen = (int *)calloc(count, sizeof(int));
         while (1) {
