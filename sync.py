@@ -45,8 +45,7 @@ class Model(object):
         self.model.weights = (c_double * self.count)()
         self.model.values = (c_double * self.count)()
         for i in xrange(self.count):
-            self.model.weights[i] = (1.0 + random.random() / self.similarity -
-                1.0 / (self.similarity * 2))
+            self.model.weights[i] = random.gauss(1.0, 1.0 / self.similarity)
             self.model.values[i] = f(random.random() * g(self.threshold))
     def update(self, dt):
         result = dll.update(byref(self.model), dt * self.speed)

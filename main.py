@@ -7,7 +7,7 @@ HEIGHT = 18
 SPEED = 1.0
 PERIOD = 3.0
 INFLUENCE = 0.005
-SIMILARITY = 4
+SIMILARITY = 16
 
 class Panel(wx.Panel):
     def __init__(self, parent, model):
