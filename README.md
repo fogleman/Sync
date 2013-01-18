@@ -24,14 +24,15 @@ inverse of their squared distance. The cells need not have identical
 individual frequencies to reach sychronization. This can be tested by tweaking
 the similarity factor, which causes the cells to vary in their charging times.
 
-## Video
+## Videos
 
-http://www.youtube.com/watch?v=1G6GHQ-EbJI
+* 2D: http://www.youtube.com/watch?v=1G6GHQ-EbJI
+* 3D: http://www.youtube.com/watch?v=KWwe4uMOmVY
 
-## Screenshot (2-D)
+## Screenshot (2D)
 
 ![Screenshot](https://raw.github.com/fogleman/Sync/master/screenshot-2d.png)
 
-## Screenshot (3-D)
+## Screenshot (3D)
 
 ![Screenshot](https://raw.github.com/fogleman/Sync/master/screenshot-3d.png)
