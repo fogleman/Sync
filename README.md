@@ -10,3 +10,9 @@ similar to firing neurons or synchronizing fireflies.
 ## Video
 
 http://www.youtube.com/watch?v=1G6GHQ-EbJI
+
+## Screenshots
+
+![Screenshot](https://raw.github.com/fogleman/Sync/master/screenshot-2d.png)
+
+![Screenshot](https://raw.github.com/fogleman/Sync/master/screenshot-3d.png)
